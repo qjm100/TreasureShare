@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toy.mapper.ToyCommunityPostMapper">
+
+    <resultMap type="ToyCommunityPost" id="ToyCommunityPostResult">
+        <id     property="id"           column="id"            />
+        <result property="userId"       column="user_id"       />
+        <result property="content"      column="content"       />
+        <result property="images"       column="images"        />
+        <result property="createBy"     column="create_by"     />
+        <result property="createTime"   column="create_time"   />
+        <result property="updateBy"     column="update_by"     />
+        <result property="updateTime"   column="update_time"   />
+        <result property="remark"       column="remark"        />
+        <result property="nickName"     column="nick_name"     />
+        <result property="avatar"       column="avatar"        />
+        <result property="likeCount"    column="like_count"    />
+        <result property="commentCount" column="comment_count" />
+    </resultMap>
+
+    <sql id="selectPostVo">
+        select p.id, p.user_id, p.content, p.images,
+               p.create_by, p.create_time, p.update_by, p.update_time, p.remark,
+               u.nick_name, u.avatar,
+               (select count(*) from toy_community_like l where l.post_id = p.id) as like_count,
+               (select count(*) from toy_community_comment c where c.post_id = p.id) as comment_count
+        from toy_community_post p
+        left join toy_user u on p.user_id = u.user_id
+    </sql>
+
+    <select id="selectPostList" parameterType="ToyCommunityPost" resultMap="ToyCommunityPostResult">
+        <include refid="selectPostVo"/>
+        <where>
+            <if test="nickName != null and nickName != ''">
+                AND u.nick_name like concat('%', #{nickName}, '%')
+            </if>
+        </where>
+        order by p.create_time desc
+    </select>
+
+    <select id="selectPostById" parameterType="Long" resultMap="ToyCommunityPostResult">
+        <include refid="selectPostVo"/>
+        where p.id = #{id}
+    </select>
+
+    <insert id="insertPost" parameterType="ToyCommunityPost" useGeneratedKeys="true" keyProperty="id">
+        insert into toy_community_post (
+            user_id, content, images,
+            create_by, create_time, update_by, update_time, remark
+        ) values (
+            #{userId}, #{content}, #{images},
+            #{createBy}, sysdate(), #{updateBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <delete id="deletePostById" parameterType="Long">
+        delete from toy_community_post where id = #{id}
+    </delete>
+
+</mapper>

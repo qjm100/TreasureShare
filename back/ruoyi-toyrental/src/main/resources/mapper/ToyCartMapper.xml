@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toy.mapper.ToyCartMapper">
+
+    <resultMap type="ToyCart" id="ToyCartResult">
+        <id     property="id"             column="id"               />
+        <result property="userId"         column="user_id"          />
+        <result property="productId"      column="product_id"       />
+        <result property="duration"       column="duration"         />
+        <result property="createTime"     column="create_time"      />
+        <result property="productName"    column="product_name"     />
+        <result property="productImage"   column="product_image"    />
+        <result property="rentPriceMonth" column="rent_price_month" />
+    </resultMap>
+
+    <sql id="selectCartVo">
+        select c.id, c.user_id, c.product_id, c.duration, c.create_time,
+               p.name as product_name, p.image as product_image, p.rent_price_month
+        from toy_cart c
+        left join toy_product p on c.product_id = p.id
+    </sql>
+
+    <select id="selectCartList" parameterType="Long" resultMap="ToyCartResult">
+        <include refid="selectCartVo"/>
+        where c.user_id = #{userId}
+        order by c.create_time desc
+    </select>
+
+    <select id="selectCartById" parameterType="Long" resultMap="ToyCartResult">
+        <include refid="selectCartVo"/>
+        where c.id = #{id}
+    </select>
+
+    <select id="selectCartByUserAndProduct" parameterType="ToyCart" resultMap="ToyCartResult">
+        <include refid="selectCartVo"/>
+        where c.user_id = #{userId} and c.product_id = #{productId}
+    </select>
+
+    <insert id="insertCart" parameterType="ToyCart" useGeneratedKeys="true" keyProperty="id">
+        insert into toy_cart (user_id, product_id, duration, create_time)
+        values (#{userId}, #{productId}, #{duration}, sysdate())
+    </insert>
+
+    <update id="updateCart" parameterType="ToyCart">
+        update toy_cart
+        <set>
+            <if test="duration != null">duration = #{duration},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCartById" parameterType="Long">
+        delete from toy_cart where id = #{id}
+    </delete>
+
+</mapper>

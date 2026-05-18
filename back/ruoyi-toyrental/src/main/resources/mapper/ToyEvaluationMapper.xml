@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toy.mapper.ToyEvaluationMapper">
+
+    <resultMap type="ToyEvaluation" id="ToyEvaluationResult">
+        <id     property="id"         column="id"          />
+        <result property="orderId"    column="order_id"    />
+        <result property="productId"  column="product_id"  />
+        <result property="userId"     column="user_id"     />
+        <result property="rating"     column="rating"      />
+        <result property="content"    column="content"     />
+        <result property="images"     column="images"      />
+        <result property="createBy"   column="create_by"   />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy"   column="update_by"   />
+        <result property="updateTime" column="update_time" />
+        <result property="remark"     column="remark"      />
+        <result property="nickName"   column="nick_name"   />
+        <result property="avatar"     column="avatar"      />
+    </resultMap>
+
+    <sql id="selectEvaluationVo">
+        select e.id, e.order_id, e.product_id, e.user_id, e.rating, e.content, e.images,
+               e.create_by, e.create_time, e.update_by, e.update_time, e.remark,
+               u.nick_name, u.avatar
+        from toy_evaluation e
+        left join toy_user u on e.user_id = u.user_id
+    </sql>
+
+    <select id="selectEvaluationByProductId" parameterType="Long" resultMap="ToyEvaluationResult">
+        <include refid="selectEvaluationVo"/>
+        where e.product_id = #{productId}
+        order by e.create_time desc
+    </select>
+
+    <insert id="insertEvaluation" parameterType="ToyEvaluation" useGeneratedKeys="true" keyProperty="id">
+        insert into toy_evaluation (
+            order_id, product_id, user_id, rating, content, images,
+            create_by, create_time, update_by, update_time, remark
+        ) values (
+            #{orderId}, #{productId}, #{userId}, #{rating}, #{content}, #{images},
+            #{createBy}, sysdate(), #{updateBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <delete id="deleteEvaluationById" parameterType="Long">
+        delete from toy_evaluation where id = #{id}
+    </delete>
+
+</mapper>

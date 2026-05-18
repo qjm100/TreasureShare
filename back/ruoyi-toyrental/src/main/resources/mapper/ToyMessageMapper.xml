@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toy.mapper.ToyMessageMapper">
+
+    <resultMap type="ToyMessage" id="ToyMessageResult">
+        <id     property="id"           column="id"               />
+        <result property="senderId"     column="sender_id"        />
+        <result property="receiverId"   column="receiver_id"      />
+        <result property="content"      column="content"          />
+        <result property="isRead"       column="is_read"          />
+        <result property="createTime"   column="create_time"      />
+        <result property="senderName"   column="sender_name"      />
+        <result property="senderAvatar" column="sender_avatar"    />
+        <result property="receiverName" column="receiver_name"    />
+        <result property="receiverAvatar" column="receiver_avatar"/>
+    </resultMap>
+
+    <!-- Get latest message per conversation for current user -->
+    <select id="selectConversations" parameterType="Long" resultMap="ToyMessageResult">
+        select m.id, m.sender_id, m.receiver_id, m.content, m.is_read, m.create_time,
+               case when m.sender_id = #{userId} then u2.nick_name else u1.nick_name end as sender_name,
+               case when m.sender_id = #{userId} then u2.avatar else u1.avatar end as sender_avatar,
+               case when m.sender_id = #{userId} then u1.nick_name else u2.nick_name end as receiver_name,
+               case when m.sender_id = #{userId} then u1.avatar else u2.avatar end as receiver_avatar
+        from toy_message m
+        left join toy_user u1 on m.sender_id = u1.user_id
+        left join toy_user u2 on m.receiver_id = u2.user_id
+        where m.id in (
+            select max(id) from toy_message
+            where sender_id = #{userId} or receiver_id = #{userId}
+            group by case when sender_id = #{userId} then receiver_id else sender_id end
+        )
+        order by m.create_time desc
+    </select>
+
+    <select id="selectMessages" resultMap="ToyMessageResult">
+        select m.id, m.sender_id, m.receiver_id, m.content, m.is_read, m.create_time,
+               u1.nick_name as sender_name, u1.avatar as sender_avatar
+        from toy_message m
+        left join toy_user u1 on m.sender_id = u1.user_id
+        where (m.sender_id = #{param1} and m.receiver_id = #{param2})
+           or (m.sender_id = #{param2} and m.receiver_id = #{param1})
+        order by m.create_time asc
+    </select>
+
+    <insert id="insertMessage" parameterType="ToyMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into toy_message (sender_id, receiver_id, content, is_read, create_time)
+        values (#{senderId}, #{receiverId}, #{content}, '0', sysdate())
+    </insert>
+
+    <update id="markRead">
+        update toy_message set is_read = '1'
+        where sender_id = #{param1} and receiver_id = #{param2} and is_read = '0'
+    </update>
+
+</mapper>

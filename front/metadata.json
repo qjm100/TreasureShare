@@ -1,0 +1,8 @@
+{
+  "name": "TreasureShare",
+  "description": "社区共享与租赁平台，让邻居之间分享心爱的物品。",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

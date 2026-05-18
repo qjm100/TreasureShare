@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toy.mapper.ToyAddressMapper">
+
+    <resultMap type="ToyAddress" id="ToyAddressResult">
+        <id     property="id"           column="id"            />
+        <result property="userId"       column="user_id"       />
+        <result property="receiverName" column="receiver_name" />
+        <result property="phone"        column="phone"         />
+        <result property="province"     column="province"      />
+        <result property="city"         column="city"          />
+        <result property="district"     column="district"      />
+        <result property="detail"       column="detail"        />
+        <result property="isDefault"    column="is_default"    />
+        <result property="createBy"     column="create_by"     />
+        <result property="createTime"   column="create_time"   />
+        <result property="updateBy"     column="update_by"     />
+        <result property="updateTime"   column="update_time"   />
+        <result property="remark"       column="remark"        />
+    </resultMap>
+
+    <sql id="selectAddressVo">
+        select id, user_id, receiver_name, phone, province, city, district, detail, is_default,
+               create_by, create_time, update_by, update_time, remark
+        from toy_address
+    </sql>
+
+    <select id="selectAddressList" parameterType="Long" resultMap="ToyAddressResult">
+        <include refid="selectAddressVo"/>
+        where user_id = #{userId}
+        order by is_default desc, create_time desc
+    </select>
+
+    <select id="selectAddressById" parameterType="Long" resultMap="ToyAddressResult">
+        <include refid="selectAddressVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAddress" parameterType="ToyAddress" useGeneratedKeys="true" keyProperty="id">
+        insert into toy_address (
+            user_id, receiver_name, phone, province, city, district, detail, is_default,
+            create_by, create_time, update_by, update_time, remark
+        ) values (
+            #{userId}, #{receiverName}, #{phone}, #{province}, #{city}, #{district}, #{detail}, #{isDefault},
+            #{createBy}, sysdate(), #{updateBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <update id="updateAddress" parameterType="ToyAddress">
+        update toy_address
+        <set>
+            <if test="receiverName != null and receiverName != ''">receiver_name = #{receiverName},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="province != null and province != ''">province = #{province},</if>
+            <if test="city != null and city != ''">city = #{city},</if>
+            <if test="district != null and district != ''">district = #{district},</if>
+            <if test="detail != null and detail != ''">detail = #{detail},</if>
+            <if test="isDefault != null and isDefault != ''">is_default = #{isDefault},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAddressById" parameterType="Long">
+        delete from toy_address where id = #{id}
+    </delete>
+
+    <update id="clearDefaultByUserId" parameterType="Long">
+        update toy_address set is_default = '0' where user_id = #{userId}
+    </update>
+
+</mapper>

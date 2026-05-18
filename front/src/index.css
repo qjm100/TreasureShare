@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fredoka", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #c41230;
+  --color-primary-hover: #a00e28;
+  --color-primary-container: #ffdad8;
+  --color-primary-fixed: #ffdad8;
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #5f5e5e;
+  --color-secondary-container: #e8e5e4;
+
+  --color-tertiary: #006d60;
+  --color-tertiary-container: #7af5e5;
+  --color-tertiary-fixed: #7af5e5;
+
+  --color-surface: #fefaf9;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #fef3f1;
+  --color-surface-container: #fdecea;
+  --color-surface-container-high: #fce4e2;
+  --color-surface-container-highest: #fadbd9;
+
+  --color-on-surface: #1e1514;
+  --color-on-surface-variant: #5c3e3c;
+
+  --color-outline: #8c6e6c;
+  --color-outline-variant: #e0c0bd;
+
+  --color-background: #fdf7f5;
+
+  --color-accent: #f0a020;
+  --color-accent-container: #ffe8c0;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans antialiased;
+  }
+
+  h1, h2, h3 {
+    @apply font-display tracking-tight;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

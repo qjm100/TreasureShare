@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.toy.mapper.ToyUserMapper">
+
+    <resultMap type="ToyUser" id="ToyUserResult">
+        <id     property="id"          column="id"           />
+        <result property="userId"      column="user_id"      />
+        <result property="nickName"    column="nick_name"    />
+        <result property="avatar"      column="avatar"       />
+        <result property="creditScore" column="credit_score" />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"  column="create_time"  />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"  column="update_time"  />
+        <result property="remark"      column="remark"       />
+    </resultMap>
+
+    <sql id="selectUserVo">
+        select id, user_id, nick_name, avatar, credit_score,
+               create_by, create_time, update_by, update_time, remark
+        from toy_user
+    </sql>
+
+    <select id="selectUserByUserId" parameterType="Long" resultMap="ToyUserResult">
+        <include refid="selectUserVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertUser" parameterType="ToyUser" useGeneratedKeys="true" keyProperty="id">
+        insert into toy_user (
+            user_id, nick_name, avatar, credit_score,
+            create_by, create_time, update_by, update_time, remark
+        ) values (
+            #{userId}, #{nickName}, #{avatar}, #{creditScore},
+            #{createBy}, sysdate(), #{updateBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <select id="selectUserByNickName" parameterType="String" resultMap="ToyUserResult">
+        select su.user_id,
+               coalesce(tu.nick_name, su.user_name) as nick_name,
+               tu.id, tu.avatar, tu.credit_score,
+               tu.create_by, tu.create_time, tu.update_by, tu.update_time, tu.remark
+        from sys_user su
+        left join toy_user tu on su.user_id = tu.user_id
+        where su.del_flag = '0'
+          and (su.user_name like concat('%', #{nickName}, '%')
+               or tu.nick_name like concat('%', #{nickName}, '%'))
+    </select>
+
+    <update id="updateUser" parameterType="ToyUser">
+        update toy_user
+        <set>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="creditScore != null">credit_score = #{creditScore},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
