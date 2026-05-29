@@ -4,8 +4,25 @@ set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACK_DIR="$PROJECT_DIR/back"
 FRONT_DIR="$PROJECT_DIR/front"
-REDIS_BIN="/tmp/redis-7.4.6/src/redis-server"
 BACKEND_JAR="$BACK_DIR/ruoyi-admin/target/ruoyi-admin.jar"
+
+# Auto-detect cache server: prefer Valkey, fall back to Redis
+detect_cache_server() {
+  if command -v valkey-server >/dev/null 2>&1; then
+    CACHE_BIN="$(command -v valkey-server)"
+    CACHE_NAME="Valkey"
+    CACHE_PROC="valkey-server"
+  elif command -v redis-server >/dev/null 2>&1; then
+    CACHE_BIN="$(command -v redis-server)"
+    CACHE_NAME="Redis"
+    CACHE_PROC="redis-server"
+  else
+    # Fall back to compiling Redis from source
+    CACHE_BIN="/tmp/redis-7.4.6/src/redis-server"
+    CACHE_NAME="Redis"
+    CACHE_PROC="redis-server"
+  fi
+}
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -21,7 +38,7 @@ fail() { echo -e "${RED}[FAIL]${NC} $1"; exit 1; }
 usage() {
   echo "Usage: $0 [start|stop|restart|status]"
   echo ""
-  echo "  start   Start all services (MySQL → Redis → Backend → Frontend)"
+  echo "  start   Start all services (MySQL → Cache → Backend → Frontend)"
   echo "  stop    Stop all services gracefully"
   echo "  restart Stop then start all services"
   echo "  status  Check if all services are running"
@@ -53,40 +70,68 @@ start_mysql() {
   fi
 }
 
-# ---- Redis ----
-start_redis() {
-  log "Starting Redis..."
-  if pgrep -x redis-server >/dev/null 2>&1; then
-    ok "Redis already running"
+# ---- Cache server (Valkey / Redis) ----
+start_cache() {
+  detect_cache_server
+  log "Starting $CACHE_NAME..."
+  if pgrep -x "$CACHE_PROC" >/dev/null 2>&1; then
+    ok "$CACHE_NAME already running"
     return 0
   fi
-  if [ ! -f "$REDIS_BIN" ]; then
-    warn "Redis binary not found at $REDIS_BIN, compiling..."
+  # Compile Redis from source if using fallback and binary not present
+  if [ "$CACHE_NAME" = "Redis" ] && [ "$CACHE_BIN" = "/tmp/redis-7.4.6/src/redis-server" ] && [ ! -f "$CACHE_BIN" ]; then
+    warn "Redis binary not found, compiling..."
     local src="/tmp/redis-7.4.6"
     if [ ! -d "$src" ]; then
       curl -sL https://download.redis.io/releases/redis-7.4.6.tar.gz | tar xz -C /tmp
     fi
     make -C "$src" -j"$(nproc)" --no-print-directory >/dev/null 2>&1
   fi
-  "$REDIS_BIN" --daemonize yes --port 6379 --loglevel notice 2>&1
+  [ -f "$CACHE_BIN" ] || fail "$CACHE_NAME binary not found at $CACHE_BIN"
+
+  # Handle incompatible RDB file (e.g. Redis RDB v12 vs Valkey)
+  local rdb_file="${PROJECT_DIR}/dump.rdb"
+  if [ -f "$rdb_file" ]; then
+    local rdb_ver
+    rdb_ver=$(head -c 9 "$rdb_file" | tail -c 4 2>/dev/null || true)
+    if [ "$rdb_ver" != "0012" ] || [ "$CACHE_NAME" = "Redis" ]; then
+      # RDB is compatible or we are on Redis, keep it
+      :
+    else
+      warn "Incompatible RDB format (v12 from Redis) detected, backing up to dump.rdb.bak"
+      mv "$rdb_file" "${rdb_file}.bak"
+    fi
+  fi
+
+  "$CACHE_BIN" --daemonize yes --port 6379 --loglevel notice 2>&1
   sleep 1
-  if pgrep -x redis-server >/dev/null 2>&1; then
-    ok "Redis started on :6379"
+  if pgrep -x "$CACHE_PROC" >/dev/null 2>&1; then
+    ok "$CACHE_NAME started on :6379"
   else
-    fail "Redis failed to start"
+    fail "$CACHE_NAME failed to start"
   fi
 }
 
-stop_redis() {
-  log "Stopping Redis..."
-  pkill -x redis-server 2>/dev/null && ok "Redis stopped" || warn "Redis was not running"
+stop_cache() {
+  detect_cache_server
+  log "Stopping $CACHE_NAME..."
+  pkill -x "$CACHE_PROC" 2>/dev/null && ok "$CACHE_NAME stopped" || warn "$CACHE_NAME was not running"
+}
+
+cache_status() {
+  detect_cache_server
+  if pgrep -x "$CACHE_PROC" >/dev/null 2>&1; then
+    echo -e "  ${CACHE_NAME}:   ${GREEN}running${NC} (:6379)"
+  else
+    echo -e "  ${CACHE_NAME}:   ${RED}stopped${NC}"
+  fi
 }
 
 # ---- Backend ----
 start_backend() {
   log "Starting backend..."
-  if curl -s -o /dev/null -w "%{http_code}" http://localhost:102480/captchaImage 2>/dev/null | grep -q 200; then
-    ok "Backend already running on :102480"
+  if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/captchaImage 2>/dev/null | grep -q 200; then
+    ok "Backend already running on :8080"
     return 0
   fi
   [ -f "$BACKEND_JAR" ] || fail "Backend JAR not found: $BACKEND_JAR (run 'mvn clean package -DskipTests' in back/)"
@@ -95,8 +140,8 @@ start_backend() {
   local pid=$!
   log "Backend PID: $pid, waiting for startup..."
   for i in $(seq 1 60); do
-    if curl -s -o /dev/null -w "%{http_code}" http://localhost:102480/captchaImage 2>/dev/null | grep -q 200; then
-      ok "Backend started on :102480 (PID $pid)"
+    if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/captchaImage 2>/dev/null | grep -q 200; then
+      ok "Backend started on :8080 (PID $pid)"
       return 0
     fi
     sleep 2
@@ -120,17 +165,17 @@ stop_backend() {
 # ---- Frontend ----
 start_frontend() {
   log "Starting frontend..."
-  if curl -s -o /dev/null -w "%{http_code}" http://localhost:5173 2>/dev/null | grep -q 200; then
-    ok "Frontend already running on :5173"
+  if curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null | grep -q 200; then
+    ok "Frontend already running on :3000"
     return 0
   fi
   cd "$FRONT_DIR"
-  nohup npx vite --host --port 5173 > /tmp/frontend.log 2>&1 &
+  nohup npm run dev > /tmp/frontend.log 2>&1 &
   local pid=$!
   log "Frontend PID: $pid, waiting for startup..."
   for i in $(seq 1 30); do
-    if curl -s -o /dev/null -w "%{http_code}" http://localhost:5173 2>/dev/null | grep -q 200; then
-      ok "Frontend started on :5173 (PID $pid)"
+    if curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null | grep -q 200; then
+      ok "Frontend started on :3000 (PID $pid)"
       return 0
     fi
     sleep 1
@@ -140,7 +185,7 @@ start_frontend() {
 
 stop_frontend() {
   log "Stopping frontend..."
-  local pids=$(pgrep -f "vite.*5173" 2>/dev/null || true)
+  local pids=$(pgrep -f "vite.*3000" 2>/dev/null || true)
   if [ -n "$pids" ]; then
     echo "$pids" | xargs kill 2>/dev/null
     sleep 1
@@ -154,8 +199,8 @@ stop_frontend() {
 # ---- RuoYi Admin UI ----
 start_ruoyi_ui() {
   log "Starting RuoYi Admin UI..."
-  if curl -s -o /dev/null -w "%{http_code}" http://localhost:1024 2>/dev/null | grep -q 200; then
-    ok "RuoYi Admin UI already running on :1024"
+  if curl -s -o /dev/null -w "%{http_code}" http://localhost:80 2>/dev/null | grep -q 200; then
+    ok "RuoYi Admin UI already running on :80"
     return 0
   fi
   cd "$BACK_DIR/ruoyi-ui"
@@ -163,8 +208,8 @@ start_ruoyi_ui() {
   local pid=$!
   log "RuoYi Admin UI PID: $pid, waiting for startup..."
   for i in $(seq 1 30); do
-    if curl -s -o /dev/null -w "%{http_code}" http://localhost:1024 2>/dev/null | grep -q 200; then
-      ok "RuoYi Admin UI started on :1024 (PID $pid)"
+    if curl -s -o /dev/null -w "%{http_code}" http://localhost:80 2>/dev/null | grep -q 200; then
+      ok "RuoYi Admin UI started on :80 (PID $pid)"
       return 0
     fi
     sleep 1
@@ -194,17 +239,17 @@ cmd_start() {
   echo "============================================"
   echo ""
   start_mysql
-  start_redis
+  start_cache
   start_backend
   start_frontend
   start_ruoyi_ui
   echo ""
   echo "============================================"
   echo "  All services running!"
-  echo "  Frontend:       http://localhost:5173"
-  echo "  RuoYi Admin UI: http://localhost:1024"
-  echo "  Backend:        http://localhost:102480"
-  echo "  Swagger:        http://localhost:102480/swagger-ui.html"
+  echo "  Frontend:       http://localhost:3000"
+  echo "  RuoYi Admin UI: http://localhost:80"
+  echo "  Backend:        http://localhost:8080"
+  echo "  Swagger:        http://localhost:8080/swagger-ui.html"
   echo "============================================"
 }
 
@@ -217,7 +262,7 @@ cmd_stop() {
   stop_frontend
   stop_ruoyi_ui
   stop_backend
-  stop_redis
+  stop_cache
   log "MySQL left running (system service)"
   echo ""
   ok "All services stopped"
@@ -234,29 +279,25 @@ cmd_status() {
     echo -e "  MySQL:    ${RED}stopped${NC}"
   fi
 
-  if pgrep -x redis-server >/dev/null 2>&1; then
-    echo -e "  Redis:    ${GREEN}running${NC} (:6379)"
-  else
-    echo -e "  Redis:    ${RED}stopped${NC}"
-  fi
+  cache_status
 
-  local http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:102480/captchaImage 2>/dev/null || echo "000")
+  local http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/captchaImage 2>/dev/null || echo "000")
   if [ "$http_code" = "200" ]; then
-    echo -e "  Backend:  ${GREEN}running${NC} (:102480)"
+    echo -e "  Backend:  ${GREEN}running${NC} (:8080)"
   else
     echo -e "  Backend:  ${RED}stopped${NC} ($http_code)"
   fi
 
-  http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5173 2>/dev/null || echo "000")
+  http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null || echo "000")
   if [ "$http_code" = "200" ]; then
-    echo -e "  Frontend:       ${GREEN}running${NC} (:5173)"
+    echo -e "  Frontend:       ${GREEN}running${NC} (:3000)"
   else
     echo -e "  Frontend:       ${RED}stopped${NC} ($http_code)"
   fi
 
-  http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1024 2>/dev/null || echo "000")
+  http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80 2>/dev/null || echo "000")
   if [ "$http_code" = "200" ]; then
-    echo -e "  RuoYi Admin UI: ${GREEN}running${NC} (:1024)"
+    echo -e "  RuoYi Admin UI: ${GREEN}running${NC} (:80)"
   else
     echo -e "  RuoYi Admin UI: ${RED}stopped${NC} ($http_code)"
   fi
