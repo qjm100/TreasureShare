@@ -29,14 +29,17 @@ export default defineConfig(({mode}) => {
         '/login': {
           target: 'http://localhost:8080',
           changeOrigin: true,
+          bypass: (req) => req.method === 'GET' ? '/' : undefined,
         },
         '/register': {
           target: 'http://localhost:8080',
           changeOrigin: true,
+          bypass: (req) => req.method === 'GET' ? '/' : undefined,
         },
         '/profile': {
           target: 'http://localhost:8080',
           changeOrigin: true,
+          bypass: (req) => req.method === 'GET' ? '/' : undefined,
         },
       },
     },

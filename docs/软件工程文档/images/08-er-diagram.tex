@@ -1,0 +1,50 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc,er}
+\begin{document}
+\begin{tikzpicture}[
+  entity/.style={rectangle,draw,fill=blue!10,minimum width=28mm,minimum height=14mm,font=\footnotesize},
+  attr/.style={rectangle,draw,fill=yellow!10,minimum width=20mm,minimum height=6mm,font=\footnotesize\footnotesize},
+  relation/.style={diamond,draw,fill=red!10,minimum width=16mm,minimum height=9mm,font=\footnotesize\footnotesize},
+  edge/.style={-,>=Stealth},
+  onetoone/.style={<->,>=Stealth},
+  onetomany/.style={->,>=Stealth},
+  manytomany/.style={<->>,>=Stealth},
+]
+
+% Core entities
+\node[entity] (user) {用户 (user)};
+\node[entity,right=36mm of user] (product) {商品 (product)};
+\node[entity,below=24mm of product] (order) {订单 (order)};
+\node[entity,left=36mm of order] (cart) {购物车 (cart)};
+
+% Attributes - user
+\node[attr,above=4mm of user] (uattr) {user\_id, username, password};
+\node[attr,below=4mm of user] (uattr2) {phone, avatar, role, status};
+
+% Attributes - product
+\node[attr,above=4mm of product] (pattr) {product\_id, name, price, deposit};
+\node[attr,below=4mm of product] (pattr2) {category\_id, owner\_id, status};
+
+% Attributes - order
+\node[attr,below=4mm of order] (oattr) {order\_id, status, total\_price};
+\node[attr,below=4mm of oattr] (oattr2) {renter\_id, owner\_id, product\_id};
+
+% Attributes - cart
+\node[attr,below=4mm of cart] (cattr) {cart\_id, user\_id, product\_id};
+\node[attr,below=4mm of cattr] (cattr2) {quantity, add\_time};
+
+% Relationships
+\node[relation,right=14mm of cart] (rent) {租赁};
+\node[relation,above=16mm of order] (add) {加入};
+
+\draw[onetomany] (user) -- node[above,font=\footnotesize]{1:n} (product);
+\draw[onetomany] (user) -- node[left,font=\footnotesize]{1:n} (cart);
+\draw[onetomany] (user) -- node[above left,font=\footnotesize]{1:n} (order);
+\draw[onetomany] (product) -- node[right,font=\footnotesize]{1:n} (order);
+\draw[onetoone] (cart) -- node[above,font=\footnotesize]{1:1} (product);
+\draw[onetoone] (order) -- node[right,font=\footnotesize]{1:1} (product);
+\end{tikzpicture}
+\end{document}

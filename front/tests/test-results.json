@@ -1,0 +1,921 @@
+{
+  "config": {
+    "configFile": "/home/Ciami/Software-engineer-final/front/tests/playwright.config.ts",
+    "rootDir": "/home/Ciami/Software-engineer-final/front/tests/specs",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/Ciami/Software-engineer-final/front/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/Ciami/Software-engineer-final/front/tests/specs",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.60.0",
+    "workers": 3,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "01-auth.spec.ts",
+      "file": "01-auth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Auth Smoke",
+          "file": "01-auth.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "login page loads via SPA navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2322,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:03.572Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "791b3c4e0869e77b2651-fd9e568035d6047b651e",
+              "file": "01-auth.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "login with valid credentials",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3367,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:06.026Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "791b3c4e0869e77b2651-2965f889a177ff63438b",
+              "file": "01-auth.spec.ts",
+              "line": 14,
+              "column": 3
+            },
+            {
+              "title": "register API returns ok",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 110,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:09.412Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "791b3c4e0869e77b2651-12bec07281eca4d561d8",
+              "file": "01-auth.spec.ts",
+              "line": 26,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "02-product.spec.ts",
+      "file": "02-product.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Product Smoke",
+          "file": "02-product.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "discovery page loads with products",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2277,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:03.580Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7bd2bdfa52d3f2667844-44ff59231d9464e785f5",
+              "file": "02-product.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "category filters are present",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2124,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:05.998Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7bd2bdfa52d3f2667844-3bd4ec09e9ef65c1e591",
+              "file": "02-product.spec.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "product API returns results",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 38,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:08.139Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7bd2bdfa52d3f2667844-32712a8b6aaa6ec06881",
+              "file": "02-product.spec.ts",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "categories API returns tree",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 15,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:08.188Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7bd2bdfa52d3f2667844-fd191a5d8e3c5924489c",
+              "file": "02-product.spec.ts",
+              "line": 28,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "03-cart.spec.ts",
+      "file": "03-cart.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Cart Smoke",
+          "file": "03-cart.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cart page redirects to login when unauthenticated",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2530,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:03.577Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce3bd1caa0073183365b-e988270aa1deb9ca1111",
+              "file": "03-cart.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "cart API requires auth",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 31,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:06.235Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce3bd1caa0073183365b-eb58e257cea749a6a0cf",
+              "file": "03-cart.spec.ts",
+              "line": 11,
+              "column": 3
+            },
+            {
+              "title": "cart API works with login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 173,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:06.284Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce3bd1caa0073183365b-04dd94902dbecade9719",
+              "file": "03-cart.spec.ts",
+              "line": 17,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "04-order.spec.ts",
+      "file": "04-order.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Order Lifecycle Smoke",
+          "file": "04-order.spec.ts",
+          "line": 12,
+          "column": 6,
+          "specs": [
+            {
+              "title": "step1 - create order from cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 31,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:06.483Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7846800661321c8e705e-a856716713fa676f2586",
+              "file": "04-order.spec.ts",
+              "line": 76,
+              "column": 3
+            },
+            {
+              "title": "step2 - pay order",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 24,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:06.940Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7846800661321c8e705e-c413b4627511f04ee029",
+              "file": "04-order.spec.ts",
+              "line": 87,
+              "column": 3
+            },
+            {
+              "title": "step3 - verify order status after pay",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 21,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:06.978Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7846800661321c8e705e-055f1641009a94eef162",
+              "file": "04-order.spec.ts",
+              "line": 96,
+              "column": 3
+            },
+            {
+              "title": "orders page loaded",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2048,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:07.009Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7846800661321c8e705e-1c0fc7fd359fb17547f6",
+              "file": "04-order.spec.ts",
+              "line": 104,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "05-address.spec.ts",
+      "file": "05-address.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Profile & Address Smoke",
+          "file": "05-address.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "profile page loads",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1498,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:08.222Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f1eddc1b8556d5196a39-ba50448dffae678bc2b5",
+              "file": "05-address.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "addresses API works with login",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 149,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:09.733Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f1eddc1b8556d5196a39-f7b6c9be5d8fb6fff330",
+              "file": "05-address.spec.ts",
+              "line": 10,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "06-community.spec.ts",
+      "file": "06-community.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Community Smoke",
+          "file": "06-community.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "community page loads",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1480,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:09.080Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ff276157d76a842edeab-236220a7207eff7eecaa",
+              "file": "06-community.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "community API returns posts",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 11,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:10.572Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ff276157d76a842edeab-f876dedce510253b607b",
+              "file": "06-community.spec.ts",
+              "line": 10,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "07-evaluation.spec.ts",
+      "file": "07-evaluation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Evaluation Smoke",
+          "file": "07-evaluation.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "evaluation API returns product evaluations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 11,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:09.542Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c398c86783c113f15bf2-5c07179739e3233dd4ef",
+              "file": "07-evaluation.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "08-messages.spec.ts",
+      "file": "08-messages.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Messages Smoke",
+          "file": "08-messages.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "messages page loads",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1464,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:09.568Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6da82e61e62d67d5c959-cd8fdf7986fe47d88893",
+              "file": "08-messages.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "messages API returns conversations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 143,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-24T08:18:11.042Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6da82e61e62d67d5c959-96288cfadcc08d8101c2",
+              "file": "08-messages.spec.ts",
+              "line": 11,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-05-24T08:18:02.926Z",
+    "duration": 8339.980000000001,
+    "expected": 21,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

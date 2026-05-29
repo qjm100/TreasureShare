@@ -1,0 +1,37 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{pgfgantt}
+\begin{document}
+\begin{tikzpicture}
+\begin{ganttchart}[
+  hgrid,
+  vgrid,
+  time slot format=isodate,
+  x unit=1.3mm,
+  y unit chart=8mm,
+  title height=1,
+  bar height=0.6,
+  group top shift=0.6,
+  bar top shift=0.4,
+  milestone height=0.5
+]{2026-03-27}{2026-06-06}
+\gantttitlecalendar{month=shortname, week=1} \\
+\ganttgroup{需求分析与设计}{2026-03-27}{2026-04-10} \\
+\ganttbar{需求调研}{2026-03-27}{2026-04-02} \\
+\ganttbar{需求文档编写}{2026-04-03}{2026-04-10} \\
+\ganttgroup{系统设计}{2026-04-11}{2026-04-25} \\
+\ganttbar{概要设计}{2026-04-11}{2026-04-18} \\
+\ganttbar{详细设计}{2026-04-19}{2026-04-25} \\
+\ganttgroup{编码实现}{2026-04-26}{2026-05-16} \\
+\ganttbar{后端开发}{2026-04-26}{2026-05-10} \\
+\ganttbar{前端开发}{2026-05-01}{2026-05-16} \\
+\ganttgroup{测试与部署}{2026-05-17}{2026-06-01} \\
+\ganttbar{单元测试}{2026-05-17}{2026-05-23} \\
+\ganttbar{集成测试}{2026-05-24}{2026-05-28} \\
+\ganttbar{部署上线}{2026-05-29}{2026-06-01} \\
+\ganttgroup{文档编写}{2026-05-28}{2026-06-06} \\
+\ganttbar{文档填写}{2026-05-29}{2026-06-04} \\
+\ganttbar{审核提交}{2026-06-05}{2026-06-06}
+\end{ganttchart}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,42 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+  comp/.style={rectangle,draw,fill=blue!10,minimum width=28mm,minimum height=9mm,font=\footnotesize,align=center},
+  api/.style={rectangle,draw,fill=green!10,minimum width=24mm,minimum height=7mm,font=\footnotesize\footnotesize},
+  edge/.style={<->,>=Stealth,thick},
+  proto/.style={font=\footnotesize\footnotesize,text=red!60!black},
+]
+
+% Components
+\node[comp] (frontend) at (0,0) {React 用户端 \\ (port 3000)};
+\node[comp,right=14mm of frontend] (adminui) {Vue 管理端 \\ (port 80)};
+\node[comp,below=24mm of $(frontend)!0.5!(adminui)$] (backend) {Spring Boot \\ (port 8080)};
+
+% APIs
+\node[api,below left=8mm and -10mm of backend] (toyapi) {/api/toy/*};
+\node[api,below right=8mm and -10mm of backend] (sysapi) {/system/*};
+
+% External
+\node[comp,right=20mm of backend] (redis) {Redis \\ :6379};
+\node[comp,left=20mm of backend] (mysql) {MySQL \\ :3306};
+
+% Edges
+\draw[edge] (frontend) -- node[proto,left]{HTTP/REST \\ Bearer JWT} (backend);
+\draw[edge] (adminui) -- node[proto,right]{HTTP/REST \\ Bearer JWT} (backend);
+\draw[edge] (backend) -- node[proto,above]{JDBC} (mysql);
+\draw[edge] (backend) -- node[proto,above]{Jedis} (redis);
+
+% Internal API
+\draw[edge] (backend) -- (toyapi);
+\draw[edge] (backend) -- (sysapi);
+
+% API detail
+\node[font=\footnotesize\footnotesize,right=2mm of toyapi,text=gray] {products, orders, cart, messages, community, evaluations};
+\node[font=\footnotesize\footnotesize,right=2mm of sysapi,text=gray] {user, role, menu, dept, config};
+
+\end{tikzpicture}
+\end{document}

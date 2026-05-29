@@ -1,0 +1,34 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+  state/.style={rectangle,rounded corners,draw,fill=blue!10,minimum width=30mm,minimum height=8mm,font=\footnotesize},
+  endstate/.style={state,fill=red!10},
+  edge/.style={->,>=Stealth,thick,font=\footnotesize},
+]
+
+\node[state] (create) {已创建};
+\node[state,right=8mm of create] (paid) {已支付};
+\node[state,right=8mm of paid] (shipped) {已发货};
+\node[state,below=12mm of shipped] (received) {已收货};
+\node[state,left=8mm of received] (returning) {归还中};
+\node[state,left=8mm of returning] (disinfect) {消毒中};
+\node[endstate,left=8mm of disinfect] (done) {已完成};
+\node[endstate,below=16mm of create] (cancelled) {已取消};
+\node[state,below=16mm of paid] (renewal) {续租};
+
+\draw[edge] (create) -- node[above]{支付} (paid);
+\draw[edge] (paid) -- node[above]{发货} (shipped);
+\draw[edge] (shipped) -- node[right]{收货确认} (received);
+\draw[edge] (received) -- node[above]{归还} (returning);
+\draw[edge] (returning) -- node[above]{验收通过} (disinfect);
+\draw[edge] (disinfect) -- node[above]{确认完成} (done);
+\draw[edge] (create) -- node[left]{取消订单} (cancelled);
+\draw[edge] (paid) -- node[left]{取消订单} (cancelled);
+\draw[edge] (received) |- node[below left]{申请续租} (renewal);
+\draw[edge] (renewal) -| node[above right]{重新计费} (paid);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,52 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+  box/.style={rectangle,draw,rounded corners=3pt,minimum width=26mm,minimum height=8mm,font=\footnotesize,align=center},
+  module/.style={box,fill=blue!10},
+  sub/.style={box,fill=green!10,minimum width=22mm,font=\footnotesize\footnotesize},
+  edge/.style={->,>=Stealth,thick},
+  dep/.style={->,>=Stealth,dashed,gray},
+]
+
+% Top level
+\node[module,minimum width=36mm,fill=blue!25] (root) {TreasureShare\\玩具租赁平台};
+
+% Layer 1: Frontend/Backend
+\node[module,fill=yellow!15,minimum width=30mm,below left=12mm and 24mm of root] (frontend) {前端层};
+\node[module,fill=yellow!15,minimum width=30mm,below right=12mm and 24mm of root] (backend) {后端层};
+
+% Frontend sub-modules
+\node[sub,below=4mm of frontend] (f1) {React 用户端};
+\node[sub,below=2mm of f1] (f2) {Vue 管理端};
+
+% Backend sub-modules
+\node[sub,below=4mm of backend] (b1) {ruoyi-admin};
+\node[sub,below=2mm of b1] (b2) {ruoyi-framework};
+\node[sub,below=2mm of b2] (b3) {ruoyi-system};
+\node[sub,below=2mm of b3] (b4) {ruoyi-toyrental};
+\node[sub,below=2mm of b4] (b5) {ruoyi-common};
+
+% Infrastructure
+\node[module,fill=red!10,below=10mm of $(b5.south)!0.5!(f2.south)$,minimum width=34mm] (infra) {基础设施层};
+\node[sub,below=4mm of infra] (i1) {MySQL (ry-vue)};
+\node[sub,below=2mm of i1] (i2) {Redis 缓存};
+\node[sub,below=2mm of i2] (i3) {Druid 连接池};
+
+% Edges
+\draw[edge] (root) -- (frontend);
+\draw[edge] (root) -- (backend);
+\draw[edge] (frontend) -- (f1);
+\draw[edge] (frontend) -- (f2);
+\draw[edge] (backend) -- (b1);
+\draw[edge] (backend) -- (b2);
+\draw[edge] (backend) -- (b3);
+\draw[edge] (backend) -- (b4);
+\draw[edge] (backend) -- (b5);
+\draw[dep] (b1) -- (infra);
+\draw[dep] (b4) -- (infra);
+\end{tikzpicture}
+\end{document}

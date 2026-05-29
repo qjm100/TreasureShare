@@ -1,0 +1,39 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc,shapes.symbols}
+\begin{document}
+\begin{tikzpicture}[
+  node/.style={rectangle,draw,fill=blue!10,minimum width=22mm,minimum height=15mm,font=\footnotesize,align=center},
+  edge/.style={<->,>=Stealth,thick},
+  labelstyle/.style={font=\footnotesize\bfseries},
+]
+
+% Client
+\node[draw,cloud,cloud puffs=10,aspect=2,fill=yellow!10,minimum width=28mm,minimum height=18mm,font=\footnotesize] (client) {客户端 \\ (浏览器)};
+
+% Nginx
+\node[node,right=14mm of client] (nginx) {Nginx \\ 反向代理 \\ :80/:3000};
+
+% App Server
+\node[node,right=14mm of nginx] (app) {Spring Boot \\ :8080 \\ ruoyi-admin.jar};
+
+% Redis
+\node[node,below=12mm of app] (redis) {Redis \\ :6379 \\ 缓存/Session};
+
+% MySQL
+\node[node,below=12mm of nginx] (mysql) {MySQL \\ :3306 \\ ry-vue};
+
+% Edges
+\draw[edge] (client) -- node[above,labelstyle]{HTTPS} (nginx);
+\draw[edge] (nginx) -- node[above,labelstyle]{proxy} (app);
+\draw[edge] (app) -- node[right,labelstyle]{Jedis} (redis);
+\draw[edge] (app) -- node[above left,labelstyle]{JDBC/Druid} (mysql);
+
+% Labels
+\node[font=\footnotesize,above=2mm of app] {应用服务器};
+\node[font=\footnotesize,below=2mm of mysql] {数据库服务器};
+
+\end{tikzpicture}
+\end{document}

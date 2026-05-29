@@ -1,0 +1,42 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit}
+\begin{document}
+\begin{tikzpicture}[
+  startstop/.style={rectangle,rounded corners=8pt,draw,fill=red!10,minimum width=32mm,minimum height=8mm,font=\footnotesize},
+  process/.style={rectangle,draw,fill=blue!10,minimum width=34mm,minimum height=8mm,font=\footnotesize},
+  decision/.style={diamond,aspect=2,draw,fill=yellow!10,minimum width=28mm,minimum height=10mm,font=\footnotesize},
+  edge/.style={->,>=Stealth,thick},
+]
+
+\node[startstop] (start) {用户访问平台};
+\node[process,below=8mm of start] (browse) {浏览/搜索商品};
+\node[decision,below=8mm of browse] (auth) {需要登录？};
+\node[process,right=20mm of auth] (login) {用户登录/JWT认证};
+\node[process,below=12mm of auth] (select) {选择商品加入购物车};
+\node[decision,below=8mm of select] (checkout) {确认下单？};
+\node[process,below=12mm of checkout] (pay) {创建订单并支付};
+\node[process,below=8mm of pay] (ship) {物主发货};
+\node[process,below=8mm of ship] (receive) {租客收货确认};
+\node[decision,below=8mm of receive] (ret) {租赁期满归还？};
+\node[process,below=12mm of ret] (done) {归还验收/评价};
+\node[startstop,below=8mm of done] (end) {订单完成};
+
+\draw[edge] (start) -- (browse);
+\draw[edge] (browse) -- (auth);
+\draw[edge] (auth) -- node[above,font=\footnotesize]{是} (login);
+\draw[edge] (auth) -- node[right,font=\footnotesize]{否} (select);
+\draw[edge] (login) |- (select);
+\draw[edge] (select) -- (checkout);
+\draw[edge] (checkout) -- node[right,font=\footnotesize]{是} (pay);
+\draw[edge] (checkout.east) -- ++(18mm,0) |- node[right,font=\footnotesize]{否} (select.east);
+\draw[edge] (pay) -- (ship);
+\draw[edge] (ship) -- (receive);
+\draw[edge] (receive) -- (ret);
+\draw[edge] (ret) -- node[right,font=\footnotesize]{是} (done);
+\draw[edge] (ret.east) -- ++(16mm,0) |- node[right,font=\footnotesize]{否（续租）} (pay.east);
+\draw[edge] (done) -- (end);
+\end{tikzpicture}
+\end{document}

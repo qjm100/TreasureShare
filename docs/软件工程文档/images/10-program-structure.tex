@@ -1,0 +1,59 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+  comp/.style={rectangle,draw,fill=blue!10,minimum width=30mm,minimum height=8mm,font=\footnotesize,align=center},
+  layer/.style={rectangle,draw,dashed,fill=gray!5,inner sep=8pt,font=\footnotesize},
+  edge/.style={->,>=Stealth,thick},
+]
+
+% Presentation Layer
+\node[comp] (web) {React SPA \\ (用户端)};
+\node[comp,right=10mm of web] (adminui) {Vue Admin \\ (管理端)};
+
+\node[layer,fit=(web)(adminui),label=above:{\textbf{表现层}}] (pl) {};
+
+% Business Layer
+\node[comp,below=16mm of web] (toyctrl) {ToyController};
+\node[comp,right=6mm of toyctrl] (orderctrl) {ToyOrderController};
+\node[comp,right=6mm of orderctrl] (cartctrl) {ToyCartController};
+\node[comp,below=6mm of toyctrl] (msgctrl) {ToyMessageController};
+\node[comp,right=6mm of msgctrl] (communityctrl) {ToyCommunityController};
+\node[comp,right=6mm of communityctrl] (evalctrl) {ToyEvaluationController};
+
+\node[layer,fit=(toyctrl)(evalctrl),label=above:{\textbf{控制层 (Spring MVC)}}] (cl) {};
+
+% Service Layer
+\node[comp,below=14mm of toyctrl] (toysvc) {ToyService};
+\node[comp,below=14mm of orderctrl] (ordersvc) {OrderService};
+\node[comp,below=14mm of cartctrl] (cartsvc) {CartService};
+
+\node[layer,fit=(toysvc)(cartsvc),label=above:{\textbf{服务层}}] (sl) {};
+
+% Data Layer
+\node[comp,below=16mm of toysvc] (mapper) {MyBatis Mapper};
+\node[comp,right=36mm of mapper] (druid) {Druid 连接池};
+\node[layer,fit=(mapper)(druid),label=above:{\textbf{数据层}}] (dl) {};
+
+% Storage
+\node[comp,below=14mm of mapper] (mysql) {MySQL (ry-vue)};
+\node[comp,right=36mm of mysql] (redis) {Redis 缓存};
+
+% Edges
+\draw[edge] (web) -- (toyctrl);
+\draw[edge] (web) -- (orderctrl);
+\draw[edge] (web) -- (cartctrl);
+\draw[edge] (adminui) -- (orderctrl);
+\draw[edge] (adminui) -- (communityctrl);
+\draw[edge] (toyctrl) -- (toysvc);
+\draw[edge] (orderctrl) -- (ordersvc);
+\draw[edge] (cartctrl) -- (cartsvc);
+\draw[edge] (toysvc) -- (mapper);
+\draw[edge] (ordersvc) -- (mapper);
+\draw[edge] (mapper) -- (mysql);
+\draw[edge] (mapper) -- (redis);
+\end{tikzpicture}
+\end{document}

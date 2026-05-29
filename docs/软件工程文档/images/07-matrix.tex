@@ -1,0 +1,37 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,matrix,fit}
+\begin{document}
+\begin{tikzpicture}[
+  cell/.style={minimum width=22mm,minimum height=7mm,font=\footnotesize},
+  header/.style={cell,fill=blue!15,font=\bfseries\footnotesize},
+  check/.style={cell,font=\normalsize},
+]
+
+\matrix (m) [matrix of nodes,
+  nodes in empty cells,
+  column sep=0,row sep=0,
+  column 1/.style={nodes=header},
+]{
+  功能/模块 & ToyController & ToyOrderController & ToyCartController & ToyMessageController & ToyCommunityController \\
+  商品浏览 & \check{$\checkmark$} & & & & \\
+  商品搜索 & \check{$\checkmark$} & & & & \\
+  下单租赁 & & \check{$\checkmark$} & \check{$\checkmark$} & & \\
+  订单管理 & & \check{$\checkmark$} & & & \\
+  购物车 & & & \check{$\checkmark$} & & \\
+  即时消息 & & & & \check{$\checkmark$} & \\
+  社区发布 & & & & & \check{$\checkmark$} \\
+  评价打分 & ToyEvaluationController & & & & \\
+};
+
+% Draw borders
+\foreach \r in {1,...,9} {
+  \foreach \c in {1,...,6} {
+    \draw (m-\r-\c.south west) rectangle (m-\r-\c.north east);
+  }
+}
+
+\end{tikzpicture}
+\end{document}

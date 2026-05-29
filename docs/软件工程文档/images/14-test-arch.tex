@@ -1,0 +1,46 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+  module/.style={rectangle,draw,rounded corners,fill=blue!10,minimum width=26mm,minimum height=8mm,font=\footnotesize},
+  testcase/.style={rectangle,draw,fill=green!10,minimum width=24mm,minimum height=7mm,font=\footnotesize\footnotesize},
+  edge/.style={->,>=Stealth,dashed,gray},
+]
+
+% Test modules
+\node[module] (unit) {单元测试};
+\node[module,right=10mm of unit] (integration) {集成测试};
+\node[module,right=10mm of integration] (e2e) {端到端测试};
+
+% Test cases
+\node[testcase,below=6mm of unit] (u1) {Service 层测试};
+\node[testcase,below=2mm of u1] (u2) {Controller 层测试};
+\node[testcase,below=2mm of u2] (u3) {Mapper 层测试};
+
+\node[testcase,below=6mm of integration] (i1) {API 接口测试};
+\node[testcase,below=2mm of i1] (i2) {JWT 认证流程};
+\node[testcase,below=2mm of i2] (i3) {文件上传测试};
+
+\node[testcase,below=6mm of e2e] (e1) {用户下单流程};
+\node[testcase,below=2mm of e1] (e2) {订单生命周期};
+\node[testcase,below=2mm of e2] (e3) {支付归还流程};
+\node[testcase,below=2mm of e3] (e4) {社区发帖评价};
+
+% System modules under test
+\node[module,minimum width=120mm,fill=red!10,below=4mm of u3] (sys) {被测试系统模块：商品 \quad 购物车 \quad 订单 \quad 消息 \quad 社区 \quad 评价 \quad 分类 \quad 地址};
+
+\draw[edge] (unit) -- (u1);
+\draw[edge] (unit) -- (u2);
+\draw[edge] (unit) -- (u3);
+\draw[edge] (integration) -- (i1);
+\draw[edge] (integration) -- (i2);
+\draw[edge] (integration) -- (i3);
+\draw[edge] (e2e) -- (e1);
+\draw[edge] (e2e) -- (e2);
+\draw[edge] (e2e) -- (e3);
+\draw[edge] (e2e) -- (e4);
+\end{tikzpicture}
+\end{document}

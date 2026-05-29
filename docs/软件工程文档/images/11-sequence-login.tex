@@ -1,0 +1,42 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+  participant/.style={rectangle,draw,fill=blue!10,minimum width=24mm,minimum height=7mm,font=\footnotesize},
+  lifeline/.style={dashed,gray,thick},
+  msg/.style={->,>=Stealth,thick,font=\footnotesize\footnotesize},
+  selfcall/.style={->,>=Stealth,thick,font=\footnotesize\footnotesize,loop above},
+  block/.style={rectangle,draw,fill=gray!5,font=\footnotesize,inner sep=4pt},
+]
+
+% Participants
+\node[participant] (browser) at (0,0) {浏览器};
+\node[participant] (frontend) at (34mm,0) {React前端};
+\node[participant] (backend) at (68mm,0) {Spring后端};
+\node[participant] (jwt) at (102mm,0) {JWT Filter};
+\node[participant] (db) at (136mm,0) {MySQL};
+
+% Lifelines
+\foreach \x in {0,34,68,102,136} {
+  \draw[lifeline] (\x mm,-8mm) -- (\x mm,-92mm);
+}
+
+% Messages
+\draw[msg] (0,-12mm) -- node[above]{1. POST /login} (34,-12mm);
+\draw[msg] (34,-20mm) -- node[above]{2. /login} (68,-20mm);
+\draw[msg] (68,-28mm) -- node[above]{3. 查询用户} (136,-28mm);
+\draw[msg] (136,-36mm) -- node[above]{4. 返回用户信息} (68,-36mm);
+\draw[msg] (68,-44mm) -- node[above]{5. 校验密码+生成JWT} (102,-44mm);
+\draw[msg] (102,-52mm) -- node[above]{6. 返回token} (68,-52mm);
+\draw[msg] (68,-60mm) -- node[above]{7. {code:200, token}} (34,-60mm);
+\draw[msg] (34,-68mm) -- node[above]{8. 存储token到localStorage} (34,-76mm);
+\draw[msg] (34,-84mm) -- node[above]{9. 跳转首页} (0,-84mm);
+
+% Auth block
+\node[block,fit={($(browser.north west)+(0,0)$) ($(db.north east)+(0,0)$)},label=above:{\textbf{用户登录认证流程}}] {};
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,33 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+  table/.style={rectangle,draw,fill=blue!10,minimum width=24mm,minimum height=32mm,font=\footnotesize,align=center},
+  edge/.style={->,>=Stealth,thick},
+]
+
+\node[table] (user) {\textbf{user} \\ \hline user\_id PK \\ username \\ password \\ phone \\ avatar \\ role \\ status \\ create\_time};
+\node[table,right=10mm of user] (product) {\textbf{product} \\ \hline product\_id PK \\ name \\ description \\ price \\ deposit \\ category\_id FK \\ owner\_id FK \\ status \\ images \\ create\_time};
+\node[table,below=10mm of product] (order) {\textbf{order} \\ \hline order\_id PK \\ renter\_id FK \\ owner\_id FK \\ product\_id FK \\ status \\ total\_price \\ start\_date \\ end\_date \\ create\_time};
+\node[table,left=10mm of order] (cart) {\textbf{cart} \\ \hline cart\_id PK \\ user\_id FK \\ product\_id FK \\ quantity \\ add\_time};
+\node[table,above=10mm of order] (category) {\textbf{category} \\ \hline category\_id PK \\ name \\ parent\_id \\ sort\_order \\ status};
+\node[table,right=10mm of order] (evaluation) {\textbf{evaluation} \\ \hline eval\_id PK \\ order\_id FK \\ user\_id FK \\ product\_id FK \\ score \\ content \\ create\_time};
+\node[table,below=10mm of order] (message) {\textbf{message} \\ \hline msg\_id PK \\ from\_id FK \\ to\_id FK \\ content \\ is\_read \\ send\_time};
+\node[table,left=10mm of user] (address) {\textbf{address} \\ \hline address\_id PK \\ user\_id FK \\ name \\ phone \\ province \\ city \\ district \\ detail \\ is\_default};
+
+% Edges
+\draw[edge] (user) -- (order);
+\draw[edge] (user) -- (cart);
+\draw[edge] (product) -- (order);
+\draw[edge] (product) -- (cart);
+\draw[edge] (product) -- (category);
+\draw[edge] (order) -- (evaluation);
+\draw[edge] (user) -- (evaluation);
+\draw[edge] (user) -- (message);
+\draw[edge] (user) -- (address);
+\draw[edge] (user) -- (product);
+\end{tikzpicture}
+\end{document}

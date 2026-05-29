@@ -1,0 +1,42 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta}
+\begin{document}
+\begin{tikzpicture}[
+  box/.style={rectangle,draw,rounded corners=3pt,minimum width=28mm,minimum height=8mm,fill=blue!10,font=\footnotesize},
+  level1/.style={fill=blue!25,minimum width=34mm,font=\small},
+  level 2/.style={},
+  edge/.style={->,>=Stealth,thick}
+]
+\node[box,level1] (root) {TreasureShare 平台};
+\node[box,level1,below=6mm of root] (user) {用户端模块};
+\node[box,level1,right=12mm of user] (admin) {管理端模块};
+\node[box,level1,left=12mm of user] (common) {公共服务模块};
+
+% User modules
+\node[box,below=4mm of user] (u1) {商品浏览与搜索};
+\node[box,below=2mm of u1] (u2) {购物车与下单};
+\node[box,below=2mm of u2] (u3) {订单管理};
+\node[box,below=2mm of u3] (u4) {消息与聊天};
+\node[box,below=2mm of u4] (u5) {社区与评价};
+
+% Admin modules
+\node[box,below=4mm of admin] (a1) {商品管理};
+\node[box,below=2mm of a1] (a2) {订单处理};
+\node[box,below=2mm of a2] (a3) {分类管理};
+\node[box,below=2mm of a3] (a4) {用户管理};
+\node[box,below=2mm of a4] (a5) {数据看板};
+
+% Common modules
+\node[box,below=4mm of common] (c1) {用户认证};
+\node[box,below=2mm of c1] (c2) {文件上传};
+\node[box,below=2mm of c2] (c3) {地址管理};
+\node[box,below=2mm of c3] (c4) {AI 智能推荐};
+
+\draw[edge] (root) -- (user);
+\draw[edge] (root) -- (admin);
+\draw[edge] (root) -- (common);
+\end{tikzpicture}
+\end{document}

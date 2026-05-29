@@ -1,0 +1,41 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit}
+\begin{document}
+\begin{tikzpicture}[
+  process/.style={circle,draw,fill=blue!10,minimum size=18mm,font=\footnotesize},
+  entity/.style={rectangle,draw,fill=gray!10,minimum width=20mm,minimum height=8mm,font=\footnotesize},
+  datastore/.style={rectangle,draw,fill=green!10,minimum width=22mm,minimum height=8mm,font=\footnotesize,
+    path picture={\draw (path picture bounding box.west) -- (path picture bounding box.east);}},
+  edge/.style={->,>=Stealth,thick},
+]
+
+% External entities
+\node[entity] (user) {用户（租客/物主）};
+\node[entity,right=40mm of user] (admin) {管理员};
+
+% Main process
+\node[process,below=24mm of $(user.east)!0.5!(admin.west)$] (system) {TreasureShare\\玩具租赁系统};
+
+% Data stores
+\node[datastore,left=14mm of system] (userdb) {用户数据};
+\node[datastore,right=14mm of system] (productdb) {商品数据};
+\node[datastore,below=8mm of system] (orderdb) {订单数据};
+
+% Flows
+\draw[edge] (user) -- node[right,font=\footnotesize]{浏览/下单/聊天} (system);
+\draw[edge] (system) -- node[left,font=\footnotesize]{商品列表/消息} (user);
+
+\draw[edge] (admin) -- node[left,font=\footnotesize]{管理操作} (system);
+\draw[edge] (system) -- node[right,font=\footnotesize]{数据报表} (admin);
+
+\draw[edge] (system) -- (userdb);
+\draw[edge] (system) -- (productdb);
+\draw[edge] (system) -- (orderdb);
+\draw[edge] (userdb) -- (system);
+\draw[edge] (productdb) -- (system);
+\draw[edge] (orderdb) -- (system);
+\end{tikzpicture}
+\end{document}

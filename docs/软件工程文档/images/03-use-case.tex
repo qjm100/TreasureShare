@@ -1,0 +1,49 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontspec}
+\setmainfont{Source Han Sans CN}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,fit,calc}
+\begin{document}
+\begin{tikzpicture}[
+  actor/.style={draw,fill=yellow!20,minimum width=6mm,minimum height=12mm},
+  usecase/.style={ellipse,draw,fill=green!10,minimum width=26mm,minimum height=9mm,font=\footnotesize},
+  system/.style={draw,rectangle,rounded corners,inner sep=15pt,dashed,fill=gray!5},
+  edge/.style={->,>=Stealth},
+  rel/.style={-,dashed}
+]
+
+% Actors
+\node[actor] (user) {租客};
+\node[actor,below=16mm of user] (owner) {物主};
+\node[actor,below=16mm of owner] (admin) {管理员};
+
+% System boundary
+\node[system,fit={($(user.east)+(16mm,32mm)$) ($(admin.east)+(16mm,-32mm)$)}] (sys) {};
+\node[font=\small,above=14mm of user] (sysname) {TreasureShare 系统};
+
+% Use cases
+\node[usecase,right=20mm of user] (browse) {浏览商品};
+\node[usecase,right=20mm of browse] (search) {搜索商品};
+\node[usecase,below=4mm of browse] (order) {租赁下单};
+\node[usecase,below=4mm of order] (pay) {支付订单};
+\node[usecase,below=4mm of pay] (chat) {即时聊天};
+
+\node[usecase,right=20mm of owner] (publish) {发布商品};
+\node[usecase,right=20mm of publish] (manage) {管理出租};
+
+\node[usecase,right=20mm of admin] (usermgmt) {用户管理};
+\node[usecase,right=20mm of usermgmt] (ordermgmt) {订单处理};
+\node[usecase,below=4mm of usermgmt] (datadash) {数据看板};
+
+\draw[edge] (user) -- (browse);
+\draw[edge] (user) -- (search);
+\draw[edge] (user) -- (order);
+\draw[edge] (user) -- (pay);
+\draw[edge] (user) -- (chat);
+\draw[edge] (owner) -- (publish);
+\draw[edge] (owner) -- (manage);
+\draw[edge] (admin) -- (usermgmt);
+\draw[edge] (admin) -- (ordermgmt);
+\draw[edge] (admin) -- (datadash);
+\end{tikzpicture}
+\end{document}
