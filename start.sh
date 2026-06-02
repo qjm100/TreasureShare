@@ -295,7 +295,7 @@ cmd_status() {
     echo -e "  Frontend:       ${RED}stopped${NC} ($http_code)"
   fi
 
-  http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:80 2>/dev/null || echo "000")
+  http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:1024 2>/dev/null || echo "000")
   if [ "$http_code" = "200" ]; then
     echo -e "  RuoYi Admin UI: ${GREEN}running${NC} (:80)"
   else

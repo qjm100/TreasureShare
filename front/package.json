@@ -9,7 +9,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "npx playwright test --config=tests/playwright.config.ts",
+    "test:ui": "npx playwright test --config=tests/playwright.config.ts --ui",
+    "test:headed": "npx playwright test --config=tests/playwright.config.ts --headed",
+    "test:order": "npx playwright test --config=tests/playwright.config.ts specs/04-order.spec.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TreasureShare 测试报告 Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --font-display:'Archivo',sans-serif;
+  --font-body:'Nunito',sans-serif;
+  --bg:#f8f9fb; --card-bg:#ffffff;
+  --text:#1a1a2e; --text-secondary:#6b7280;
+  --pass:#10b981; --pass-bg:#ecfdf5; --pass-border:#a7f3d0;
+  --accent:#ff3300; --accent-light:rgba(255,51,0,0.08);
+  --border:#e5e7eb; --radius:12px;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;padding:2rem}
+.dashboard{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:1.5rem}
+
+/* header */
+.header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem}
+.header h1{font-family:var(--font-display);font-size:2rem;font-weight:800;letter-spacing:-0.02em}
+.header h1 span{color:var(--accent)}
+.header .meta{display:flex;gap:2rem;color:var(--text-secondary);font-size:0.875rem}
+.header .meta strong{display:block;color:var(--text);font-size:1.5rem;font-family:var(--font-display)}
+
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:0.25rem}
+.kpi-card .label{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-secondary)}
+.kpi-card .value{font-family:var(--font-display);font-size:2.25rem;font-weight:800}
+.kpi-card .value.green{color:var(--pass)}
+
+/* charts row */
+.charts-row{display:grid;grid-template-columns:280px 1fr;gap:1rem}
+@media(max-width:800px){.charts-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.chart-card h3{font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);margin-bottom:1rem}
+canvas{display:block;width:100%}
+
+/* table */
+.table-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.table-card h3{font-family:var(--font-display);font-size:0.9rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);padding:1.25rem 1.5rem 0}
+table{width:100%;border-collapse:collapse;margin-top:0.75rem}
+th{text-align:left;padding:0.65rem 1.5rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-secondary);border-bottom:2px solid var(--border);background:#fafbfc}
+td{padding:0.75rem 1.5rem;font-size:0.875rem;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td .badge{padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:700}
+tr:hover{background:var(--accent-light)}
+.badge-pass{background:var(--pass-bg);color:var(--pass);border:1px solid var(--pass-border)}
+.badge-skip{background:#fef3c7;color:#d97706}
+.badge-fail{background:#fef2f2;color:#dc2626}
+.row-bar{display:inline-block;height:6px;background:var(--pass);border-radius:3px;vertical-align:middle;margin-right:8px}
+.row-bar-bg{display:inline-block;width:120px;height:6px;background:#e5e7eb;border-radius:3px;vertical-align:middle}
+
+/* bar chart */
+.bar-list{display:flex;flex-direction:column;gap:0.5rem}
+.bar-row{display:flex;align-items:center;gap:0.75rem}
+.bar-label{width:100px;font-size:0.8rem;color:var(--text-secondary);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:22px;background:#f3f4f6;border-radius:4px;position:relative;overflow:hidden}
+.bar-fill{height:100%;background:var(--pass);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:0.7rem;color:#fff;font-weight:700;transition:width 0.6s ease}
+.bar-fill .count{font-family:var(--font-display);font-size:0.7rem}
+
+/* footer */
+.footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;padding:1rem 0;color:var(--text-secondary);font-size:0.8rem}
+.footer a{color:var(--text);text-decoration:none;font-weight:600}
+.footer .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--pass);margin-right:4px}
+</style>
+</head>
+<body>
+<div class="dashboard">
+
+  <div class="header">
+    <div>
+      <h1>TreasureShare <span>测试报告</span></h1>
+      <div class="meta" style="margin-top:0.5rem">
+        <div><strong>2026-05-24</strong>运行日期</div>
+        <div><strong>Playwright 1.60</strong>框架版本</div>
+        <div><strong>Chromium headless</strong>浏览器</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI cards -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="label">测试用例总数</div>
+      <div class="value">21</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">通过</div>
+      <div class="value green">21</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">通过率</div>
+      <div class="value green">100%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">总耗时</div>
+      <div class="value" style="font-size:1.8rem">8.3s</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <h3>通过率分布</h3>
+      <canvas id="donutCanvas" width="230" height="230"></canvas>
+    </div>
+    <div class="chart-card" style="display:flex;flex-direction:column;justify-content:center">
+      <h3>各模块测试数量</h3>
+      <div class="bar-list" style="margin-top:1rem">
+        <div class="bar-row"><span class="bar-label">认证 Auth</span><div class="bar-track"><div class="bar-fill" style="width:100%"><span class="count">3</span></div></div></div>
+        <div class="bar-row"><span class="bar-label">商品 Product</span><div class="bar-track"><div class="bar-fill" style="width:100%"><span class="count">4</span></div></div></div>
+        <div class="bar-row"><span class="bar-label">购物车 Cart</span><div class="bar-track"><div class="bar-fill" style="width:75%"><span class="count">3</span></div></div></div>
+        <div class="bar-row"><span class="bar-label">订单 Order</span><div class="bar-track"><div class="bar-fill" style="width:100%"><span class="count">4</span></div></div></div>
+        <div class="bar-row"><span class="bar-label">地址 Address</span><div class="bar-track"><div class="bar-fill" style="width:50%"><span class="count">2</span></div></div></div>
+        <div class="bar-row"><span class="bar-label">社区 Community</span><div class="bar-track"><div class="bar-fill" style="width:50%"><span class="count">2</span></div></div></div>
+        <div class="bar-row"><span class="bar-label">评价 Evaluation</span><div class="bar-track"><div class="bar-fill" style="width:25%"><span class="count">1</span></div></div></div>
+        <div class="bar-row"><span class="bar-label">消息 Messages</span><div class="bar-track"><div class="bar-fill" style="width:50%"><span class="count">2</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test result table -->
+  <div class="table-card">
+    <h3>测试用例明细</h3>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>测试套件</th><th>测试用例</th><th>类型</th><th>耗时</th><th>结果</th><th>通过率</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3"><strong>01-auth</strong><br><small>认证 Smoke</small></td><td>login page loads via SPA navigation</td><td>UI</td><td>2.3s</td><td><span class="badge badge-pass">PASS</span></td><td rowspan="3"><span class="row-bar-bg"><span class="row-bar" style="width:100%"></span></span>3/3</td></tr>
+        <tr><td>login with valid credentials</td><td>UI</td><td>3.4s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td>register API returns ok</td><td>API</td><td>0.1s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td rowspan="4"><strong>02-product</strong><br><small>商品 Smoke</small></td><td>discovery page loads with products</td><td>UI</td><td>2.3s</td><td><span class="badge badge-pass">PASS</span></td><td rowspan="4"><span class="row-bar-bg"><span class="row-bar" style="width:100%"></span></span>4/4</td></tr>
+        <tr><td>category filters are present</td><td>UI</td><td>2.1s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td>product API returns results</td><td>API</td><td>0.04s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td>categories API returns tree</td><td>API</td><td>0.02s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td rowspan="3"><strong>03-cart</strong><br><small>购物车 Smoke</small></td><td>cart page redirects to login when unauthenticated</td><td>UI</td><td>2.5s</td><td><span class="badge badge-pass">PASS</span></td><td rowspan="3"><span class="row-bar-bg"><span class="row-bar" style="width:100%"></span></span>3/3</td></tr>
+        <tr><td>cart API requires auth</td><td>API</td><td>0.03s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td>cart API works with login</td><td>API</td><td>0.2s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr style="background:var(--accent-light)"><td rowspan="4"><strong>04-order</strong><br><small>订单生命周期 Smoke</small></td><td>step1 - create order from cart</td><td>API</td><td>0.03s</td><td><span class="badge badge-pass">PASS</span></td><td rowspan="4"><span class="row-bar-bg"><span class="row-bar" style="width:100%"></span></span>4/4</td></tr>
+        <tr style="background:var(--accent-light)"><td>step2 - pay order</td><td>API</td><td>0.02s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr style="background:var(--accent-light)"><td>step3 - verify order status after pay</td><td>API</td><td>0.02s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr style="background:var(--accent-light)"><td>orders page loaded</td><td>UI</td><td>2.0s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td rowspan="2"><strong>05-address</strong><br><small>地址 Smoke</small></td><td>profile page loads</td><td>UI</td><td>1.5s</td><td><span class="badge badge-pass">PASS</span></td><td rowspan="2"><span class="row-bar-bg"><span class="row-bar" style="width:100%"></span></span>2/2</td></tr>
+        <tr><td>addresses API works with login</td><td>API</td><td>0.15s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td rowspan="2"><strong>06-community</strong><br><small>社区 Smoke</small></td><td>community page loads</td><td>UI</td><td>1.5s</td><td><span class="badge badge-pass">PASS</span></td><td rowspan="2"><span class="row-bar-bg"><span class="row-bar" style="width:100%"></span></span>2/2</td></tr>
+        <tr><td>community API returns posts</td><td>API</td><td>0.01s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><td rowspan="1"><strong>07-evaluation</strong><br><small>评价 Smoke</small></td><td>evaluation API returns product evaluations</td><td>API</td><td>0.01s</td><td><span class="badge badge-pass">PASS</span></td><td><span class="row-bar-bg"><span class="row-bar" style="width:100%"></span></span>1/1</td></tr>
+        <tr><td rowspan="2"><strong>08-messages</strong><br><small>消息 Smoke</small></td><td>messages page loads</td><td>UI</td><td>1.5s</td><td><span class="badge badge-pass">PASS</span></td><td rowspan="2"><span class="row-bar-bg"><span class="row-bar" style="width:100%"></span></span>2/2</td></tr>
+        <tr><td>messages API returns conversations</td><td>API</td><td>0.14s</td><td><span class="badge badge-pass">PASS</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><span class="dot"></span>全部 21 个用例通过，0 失败，0 跳过</span>
+    <span>测试框架: <a href="#">Playwright 1.60</a> &nbsp;|&nbsp; 3 workers 并行 &nbsp;|&nbsp; retries: 1</span>
+  </div>
+</div>
+
+<script>
+// Donut chart
+(function(){
+  const canvas=document.getElementById('donutCanvas');
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height;
+  const cx=w/2,cy=h/2,r=85,ir=52;
+  ctx.clearRect(0,0,w,h);
+
+  // background ring
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.arc(cx,cy,ir,Math.PI*2,0,true);
+  ctx.fillStyle='#f3f4f6';ctx.fill();
+
+  // pass arc (100%)
+  ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,Math.PI*1.5);ctx.arc(cx,cy,ir,Math.PI*1.5,-Math.PI/2,true);
+  ctx.fillStyle='#10b981';ctx.fill();
+
+  // center text
+  ctx.fillStyle='#1a1a2e';ctx.font='800 32px Archivo,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('100%',cx,cy-4);
+  ctx.fillStyle='#6b7280';ctx.font='600 11px Nunito,sans-serif';ctx.fillText('PASS RATE',cx,cy+20);
+})();
+</script>
+</body>
+</html>
